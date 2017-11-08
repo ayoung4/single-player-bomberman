@@ -1,0 +1,26 @@
+{
+  "name": "bundled-sketch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "http-server -o -c 1 -a localhost",
+    "bundle": "watchify -vd -p browserify ./src/main.ts -p [ tsify ] -o ./dist/bundle.js",
+    "start": "npm-run-all --parallel bundle serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/lodash": "^4.14.82",
+    "browserify": "^14.5.0",
+    "http-server": "^0.10.0",
+    "npm-run-all": "^4.1.2",
+    "tsify": "^3.0.3",
+    "typescript": "^2.6.1",
+    "watchify": "^3.9.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "p5": "^0.5.16"
+  }
+}
