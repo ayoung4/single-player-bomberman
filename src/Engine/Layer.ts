@@ -41,7 +41,7 @@ export class Layer<T> {
         this.posMatrix[x][y] = false;
         delete this.contents[this.toXYString(x, y)];
     }
-    all(): T[] {
+    get all(): T[] {
         const keys = _.keys(this.contents);
         return _.map(keys, (k) => this.contents[k]);
     }

@@ -8,6 +8,5 @@ export class Player extends GameObj {
         sketch.rect(this.x * RES, this.y * RES, RES, RES);
         sketch.fill(0, 0, 255);
         sketch.rect(this.x * RES, (this.y * RES) - 10, RES, RES);
-
     }
 }
