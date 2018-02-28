@@ -6,6 +6,6 @@ export class Fire extends TempGameObj {
     show(sketch) {
         sketch.fill(255, 0, 0, 100);
         sketch.noStroke();
-        sketch.rect(this.x * RES, this.y * RES, RES, RES);
+        sketch.rect(this.x * RES, this.y * RES, RES, RES, 0.9);
     }
 }

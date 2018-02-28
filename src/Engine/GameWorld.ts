@@ -61,21 +61,32 @@ export class GameWorld {
     step() {
 
 
-        const removedBoxes = _.filter(this.boxes.all, (b) => {
-            return _.reduce(this.fires.all, (collision, f) => collision || Utils.collides(f, b), false)
+        const removedBoxes = _.filter(this.boxes.items, ({ x, y }) => this.fires.hasCollision(x, y));
+
+        _.forEach(removedBoxes, ({ x, y }) => this.boxes.remove(x, y));
+
+        _.forEach(this.bombs.data, (data) => {
+            data.incrementAge();
+            if (data.deletable) {
+                const fires = data.explode(this);
+                _.forEach(fires, (f) => this.fires.insert(f.x, f.y, f));
+                this.bombs.remove(data.x, data.y);
+            }
         });
 
-        // this.bombs = _.filter(this.bombs, (b) => b.age < MAX_BOMB_AGE);
-        // this.fires = _.filter(this.fires, (f) => f.age < MAX_FIRE_AGE);
+        _.forEach(this.fires.data, (data) => {
+            const { x, y } = data;
+            data.incrementAge();
+            if (this.bombs.hasCollision(x, y)) {
+                this.bombs.find(x, y).explode(this);
+                this.bombs.remove(data.x, data.y)
+            }
+            if (data.deletable) {
+                this.fires.remove(x, y);
+            }
+        });
 
-        // _.forEach(this.bombs, (b) => {
-        //     b.incrementAge();
-        //     if (b.age === MAX_BOMB_AGE) {
-        //         const fires = b.explode(this, 4);
-        //         this.fires = [...fires, ...this.fires];
-        //     }
-        // });
-        // _.forEach(this.fires, (f) => f.incrementAge());
+
     }
     show(sketch: p5Sketch) {
 
@@ -84,15 +95,14 @@ export class GameWorld {
                 if (this.player.x === x && this.player.y === y) {
                     this.player.show(sketch);
                 } else {
+                    sketch.fill(100);
+                    sketch.rect(x * RES, y * RES, RES, RES);
                     let item = this.walls.find(x, y)
-                        || this.fires.find(x, y)
                         || this.boxes.find(x, y)
+                        || this.fires.find(x, y)
                         || this.bombs.find(x, y);
                     if (item) {
                         item.show(sketch);
-                    } else {
-                        sketch.fill(100);
-                        sketch.rect(x * RES, y * RES, RES, RES);
                     }
                 }
             });

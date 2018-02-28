@@ -2,6 +2,12 @@ import { WIDTH, HEIGHT } from './Settings';
 import { Utils } from './Utils';
 import * as _ from 'lodash';
 
+interface LayerItem<T> {
+    data: T
+    x: number;
+    y: number;
+}
+
 export class Layer<T> {
     posMatrix: boolean[][];
     width: number;
@@ -41,8 +47,15 @@ export class Layer<T> {
         this.posMatrix[x][y] = false;
         delete this.contents[this.toXYString(x, y)];
     }
-    get all(): T[] {
+    get data(): T[] {
         const keys = _.keys(this.contents);
         return _.map(keys, (k) => this.contents[k]);
+    }
+    get items(): LayerItem<T>[] {
+        const keys = _.keys(this.contents);
+        return _.map(keys, (k) => {
+            const { x, y } = this.fromXYString(k);
+            return { x, y, data: this.contents[k] };
+        });
     }
 }
